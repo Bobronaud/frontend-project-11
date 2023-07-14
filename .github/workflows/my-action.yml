@@ -1,0 +1,25 @@
+name: Node CI
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x]
+    steps:
+      - uses: actions/checkout@v3.0.0
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3.0.0
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: npm install, build
+        run: |
+          make install
+          make build
+        env:
+          CI: true
+
+      - name: run linter
+        run: make lint
