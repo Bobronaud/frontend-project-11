@@ -1,4 +1,4 @@
-export default (elements) => (path, value, prevValue) => {
+export default (elements) => (path, value) => {
   if (path === 'form.valid') {
     if (!value) {
       elements.input.classList.add('is-invalid');

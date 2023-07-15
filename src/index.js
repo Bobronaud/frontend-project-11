@@ -1,8 +1,8 @@
 import './styles.scss';
 import 'bootstrap';
-import render from './render.js';
 import * as yup from 'yup';
 import onChange from 'on-change';
+import render from './render.js';
 
 const elements = {
   form: document.querySelector('form'),
