@@ -2,7 +2,7 @@ import './styles.scss';
 import 'bootstrap';
 import * as yup from 'yup';
 import onChange from 'on-change';
-import i18n from 'i18next';
+import i18next from 'i18next';
 import ru from './locales/ru.js';
 import render from './render.js';
 
@@ -22,22 +22,22 @@ export default () => {
   };
   const watcher = onChange(initialState, render(elements));
 
-  i18n
+  i18next
     .init({
       lng: defaultLang,
       debug: true,
       resourses: { ru },
     })
     .then(() => {
-      console.log(i18n.t('mainHeader.header'));
+      console.log(i18next.t('mainHeader.header'));
       elements.form.addEventListener('submit', (e) => {
         e.preventDefault();
         yup.setLocale({
           mixed: {
-            notOneOf: i18n.t('form.errors.invlidNotOneOf'),
+            notOneOf: i18next.t('form.errors.invlidNotOneOf'),
           },
           string: {
-            url: i18n.t('form.errors.invalidUrl'),
+            url: i18next.t('form.errors.invalidUrl'),
           },
         });
         const schema = yup.object().shape({
