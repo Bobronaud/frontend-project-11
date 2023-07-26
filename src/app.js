@@ -30,7 +30,7 @@ export default () => {
     feeds: [],
     posts: [],
     uiState: {
-      modal,
+      modal: '',
       viewedPosts: [],
     },
   };
@@ -106,8 +106,8 @@ export default () => {
               .then(() => {
                 const postButtons = document.querySelectorAll('.posts button');
                 postButtons.forEach((button) => {
-                  button.addEventListener('click', (e) => {
-                    const buttonId = e.target.dataset.id;
+                  button.addEventListener('click', (el) => {
+                    const buttonId = el.target.dataset.id;
                     const actualPost = watcher.posts.find(({ id }) => id === buttonId);
                     watcher.uiState.modal = actualPost;
                     watcher.uiState.viewedPosts.push(actualPost.id);
