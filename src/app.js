@@ -8,6 +8,7 @@ import uniqueId from 'lodash/uniqueId.js';
 import ru from './locales/ru.js';
 import render from './render.js';
 import parser from './parser.js';
+import checkNewPosts from './checkNewPosts.js';
 
 export default () => {
   const elements = {
@@ -93,6 +94,7 @@ export default () => {
                 });
                 watcher.rssLinks.push(rssLink);
                 watcher.form.valid = true;
+                setTimeout(checkNewPosts(watcher), 5000);
               })
               .catch((err) => {
                 watcher.form.valid = false;

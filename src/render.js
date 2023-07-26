@@ -38,7 +38,7 @@ export default (elements, i18nInstance) => (path, value) => {
       const ul = document.querySelector('.feeds ul');
       const li = document.createElement('li');
       li.classList.add('list-group-item', 'border-0', 'border-end-0');
-      ul.append(li);
+      ul.prepend(li);
       const header = document.createElement('h3');
       header.classList.add('h6', 'm-0');
       header.textContent = title;
@@ -92,7 +92,7 @@ export default (elements, i18nInstance) => (path, value) => {
       button.setAttribute('data-bs-target', '#modal');
       button.textContent = i18nInstance.t('main.posts.button.name');
       li.append(a, button);
-      ul.append(li);
+      ul.prepend(li);
       break;
     }
     case 'form.error': {
