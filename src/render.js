@@ -95,6 +95,23 @@ export default (elements, i18nInstance) => (path, value) => {
       ul.prepend(li);
       break;
     }
+    case 'uiState.modal': {
+      const modalTitle = document.querySelector('.modal-title');
+      modalTitle.textContent = value.title;
+      const modalBody = document.querySelector('.modal-body');
+      modalBody.textContent = value.description;
+      const buttonToFullArticle = document.querySelector('.full-article');
+      buttonToFullArticle.setAttribute('href', value.link);
+      break;
+    }
+    case 'uiState.viewedPosts': {
+      value.forEach((id) => {
+        const actualPost = document.querySelector(`.posts li [data-id="${id}"]`);
+        actualPost.classList.remove('fw-bold');
+        actualPost.classList.add('fw-normal');
+      });
+      break;
+    }
     case 'form.error': {
       elements.feedback.classList.remove('text-success');
       elements.feedback.classList.add('text-danger');

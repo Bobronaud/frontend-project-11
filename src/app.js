@@ -29,6 +29,10 @@ export default () => {
     rssLinks: [],
     feeds: [],
     posts: [],
+    uiState: {
+      modal,
+      viewedPosts: [],
+    },
   };
 
   const i18nInstance = i18next.createInstance();
@@ -80,13 +84,16 @@ export default () => {
                   description: feedDescription,
                   id: feedId,
                 });
+
                 const items = xmlDom.querySelectorAll('item');
                 items.forEach((item) => {
                   const postTitle = item.querySelector('title').textContent;
+                  const postDescription = item.querySelector('description').textContent;
                   const link = item.querySelector('link').textContent;
                   const postId = uniqueId();
                   watcher.posts.push({
                     title: postTitle,
+                    description: postDescription,
                     link,
                     id: postId,
                     feedId,
@@ -95,6 +102,17 @@ export default () => {
                 watcher.rssLinks.push(rssLink);
                 watcher.form.valid = true;
                 setTimeout(checkNewPosts(watcher), 5000);
+              })
+              .then(() => {
+                const postButtons = document.querySelectorAll('.posts button');
+                postButtons.forEach((button) => {
+                  button.addEventListener('click', (e) => {
+                    const buttonId = e.target.dataset.id;
+                    const actualPost = watcher.posts.find(({ id }) => id === buttonId);
+                    watcher.uiState.modal = actualPost;
+                    watcher.uiState.viewedPosts.push(actualPost.id);
+                  });
+                });
               })
               .catch((err) => {
                 watcher.form.valid = false;

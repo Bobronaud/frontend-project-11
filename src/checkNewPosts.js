@@ -26,10 +26,12 @@ const checkNewPosts = (states) => {
         });
         newPosts.forEach((post) => {
           const postTitle = post.querySelector('title').textContent;
+          const postDescription = post.querySelector('description').textContent;
           const link = post.querySelector('link').textContent;
           const postId = uniqueId();
           states.posts.push({
             title: postTitle,
+            description: postDescription,
             link,
             id: postId,
             feedId,
