@@ -61,6 +61,7 @@ export default () => {
           .validate({ link: elements.input.value })
           .then(() => {
             const rssLink = elements.input.value;
+
             const requestToRss = (rss) => {
               axios
                 .get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(rss)}`)
@@ -119,25 +120,19 @@ export default () => {
                   });
                 })
                 .catch((err) => {
-                  if (err.request) {
-                    watcher.form.valid = false;
-                    watcher.form.error = 'form.errors.failRequest';
-                    console.error('form.errors.failRequest');
-                    console.error(err);
-                  } else {
-                    watcher.form.valid = false;
-                    watcher.form.error = err.message;
-                    console.error(err);
-                  }
+                  watcher.form.valid = false;
+                  watcher.form.error = err.request ? 'form.errors.failRequest' : err.message;
+                  console.error(err);
                 });
               watcher.form.valid = '';
             };
+
             requestToRss(rssLink);
           })
-          .catch((err) => {
+          .catch((e) => {
             watcher.form.valid = false;
-            watcher.form.error = err.errors;
-            console.error(err);
+            watcher.form.error = e.errors;
+            console.error(e);
           });
       });
     });
