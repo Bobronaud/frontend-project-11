@@ -11,7 +11,7 @@ export default {
         emptyField: 'Не должно быть пустым',
         invalidUrl: 'Ссылка должна быть валидным URL',
         invlidNotOneOf: 'RSS уже существует',
-        failRequest: ' Ошибка сети',
+        failRequest: 'Ошибка сети',
         failParsing: 'Ресурс не содержит валидный RSS',
       },
       success: 'RSS успешно загружен',

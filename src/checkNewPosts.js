@@ -7,9 +7,6 @@ const checkNewPosts = (states) => {
     axios
       .get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(rssLink)}`)
       .then((response) => {
-        if (response.status !== 200) {
-          throw new Error('form.errors.failRequest');
-        }
         const content = response.data.contents;
         const xmlDom = parser(content);
 
@@ -39,8 +36,16 @@ const checkNewPosts = (states) => {
         });
       })
       .catch((err) => {
-        states.form.error = err.message;
-        console.error(err);
+        if (err.request) {
+          states.form.valid = false;
+          states.form.error = 'form.errors.failRequest';
+          console.error('form.errors.failRequest');
+          console.error(err);
+        } else {
+          states.form.valid = false;
+          states.form.error = err.message;
+          console.error(err);
+        }
       })
       .then(() => setTimeout(checkNewPosts(states), 5000));
   });

@@ -65,9 +65,6 @@ export default () => {
             axios
               .get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(rssLink)}`)
               .then((response) => {
-                if (response.status !== 200) {
-                  throw new Error('form.errors.failRequest');
-                }
                 const content = response.data.contents;
                 const xmlDom = parser(content);
                 const hasParserError = xmlDom.querySelector('parsererror');
@@ -116,9 +113,16 @@ export default () => {
                 });
               })
               .catch((err) => {
-                watcher.form.valid = false;
-                watcher.form.error = err.message;
-                console.error(err);
+                if (err.request) {
+                  watcher.form.valid = false;
+                  watcher.form.error = 'form.errors.failRequest';
+                  console.error('form.errors.failRequest');
+                  console.error(err);
+                } else {
+                  watcher.form.valid = false;
+                  watcher.form.error = err.message;
+                  console.error(err);
+                }
               });
             watcher.form.valid = '';
           })
