@@ -52,10 +52,11 @@ export default () => {
           },
           string: {
             url: 'form.errors.invalidUrl',
+            min: 'form.errors.emptyField',
           },
         });
         const schema = yup.object().shape({
-          link: yup.string().url().notOneOf(watcher.rssLinks),
+          link: yup.string().min(1).url().notOneOf(watcher.rssLinks),
         });
         schema
           .validate({ link: elements.input.value })
