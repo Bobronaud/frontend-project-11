@@ -7,7 +7,7 @@ const checkNewPosts = (states) => {
     axios
       .get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(rssLink)}`)
       .then((response) => {
-        if (response.status > 12000 && response.status < 12100) {
+        if (response.status !== 200) {
           throw new Error('form.errors.failRequest');
         }
         const content = response.data.contents;
