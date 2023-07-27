@@ -43,8 +43,8 @@ export default () => {
     })
     .then(() => {
       const watcher = onChange(initialState, render(elements, i18nInstance));
-      elements.form.addEventListener('submit', (e) => {
-        e.preventDefault();
+      elements.form.addEventListener('submit', (el) => {
+        el.preventDefault();
         yup.setLocale({
           mixed: {
             notOneOf: 'form.errors.invlidNotOneOf',
@@ -111,8 +111,8 @@ export default () => {
                 .then(() => {
                   const postButtons = document.querySelectorAll('.posts button');
                   postButtons.forEach((button) => {
-                    button.addEventListener('click', (el) => {
-                      const buttonId = el.target.dataset.id;
+                    button.addEventListener('click', ({ target }) => {
+                      const buttonId = target.dataset.id;
                       const actualPost = watcher.posts.find(({ id }) => id === buttonId);
                       watcher.uiState.modal = actualPost;
                       watcher.uiState.viewedPosts.push(actualPost.id);
