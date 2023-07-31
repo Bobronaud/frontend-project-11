@@ -13,5 +13,23 @@
 
 **Launch page and start develop IRL**: make develop
 
-**Build project**: make build
+**Build project for production**: make build
+#
+
+RSS links for testing:
+
+https://aljazeera.com/xml/rss/all.xml
+
+https://buzzfeed.com/world.xml
+
+https://thecipherbrief.com/feed
+
+https://rt.com/rss/news
+
+http://www.dp.ru/exportnews.xml
+
+http://www.fontanka.ru/fontanka.rss
+
+http://lenta.ru/l/r/EX/import.rss
+
 
