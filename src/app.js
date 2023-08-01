@@ -70,11 +70,14 @@ export default () => {
           });
       });
 
-      elements.posts.addEventListener('click', ({ target }) => {
-        const buttonId = target.dataset.id;
-        const actualPost = watcher.posts.find(({ id }) => id === buttonId);
-        watcher.uiState.modal = actualPost;
-        watcher.uiState.viewedPosts.push(actualPost.id);
+      elements.posts.addEventListener('click', (e) => {
+        const isButtonClicked = e.target.localName === 'button';
+        if (isButtonClicked) {
+          const buttonId = e.target.dataset.id;
+          const actualPost = watcher.posts.find(({ id }) => id === buttonId);
+          watcher.uiState.modal = actualPost;
+          watcher.uiState.viewedPosts.push(actualPost.id);
+        }
       });
 
       startCheckNewPosts(watcher);
