@@ -7,7 +7,6 @@
 
 **Versions requirement**:
 - node v20.4.0
-- make 4.3
   
 **Install localy**: clone repository -> make install
 
@@ -32,4 +31,4 @@ http://www.fontanka.ru/fontanka.rss
 
 http://lenta.ru/l/r/EX/import.rss
 
-
+https://lorem-rss.hexlet.app/
