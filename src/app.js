@@ -43,17 +43,18 @@ export default () => {
     .then(() => {
       const watcher = onChange(initialState, render(elements, i18nInstance));
 
+      yup.setLocale({
+        mixed: {
+          notOneOf: 'form.errors.invlidNotOneOf',
+        },
+        string: {
+          url: 'form.errors.invalidUrl',
+          min: 'form.errors.emptyField',
+        },
+      });
+
       elements.form.addEventListener('submit', (el) => {
         el.preventDefault();
-        yup.setLocale({
-          mixed: {
-            notOneOf: 'form.errors.invlidNotOneOf',
-          },
-          string: {
-            url: 'form.errors.invalidUrl',
-            min: 'form.errors.emptyField',
-          },
-        });
         const schema = yup.object().shape({
           link: yup.string().min(1).url().notOneOf(watcher.rssLinks),
         });
