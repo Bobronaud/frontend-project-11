@@ -1,17 +1,13 @@
 import axios from 'axios';
 import uniqueId from 'lodash/uniqueId.js';
-import parser from './parser.js';
+import parse from './parse.js';
 
 const requestToRss = (rss, state) => {
   axios
     .get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(rss)}`)
     .then((response) => {
       const content = response.data.contents;
-      const xmlDom = parser(content);
-      const hasParserError = xmlDom.querySelector('parsererror');
-      if (hasParserError) {
-        throw new Error('form.errors.failParsing');
-      }
+      const xmlDom = parse(content, 'application/xml');
       const feedTitle = xmlDom.querySelector('title').textContent;
       const feedDescription = xmlDom.querySelector('description').textContent;
       let feedId;
