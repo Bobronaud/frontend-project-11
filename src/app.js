@@ -5,7 +5,7 @@ import onChange from 'on-change';
 import i18next from 'i18next';
 import ru from './locales/ru.js';
 import render from './render.js';
-import requestToRss from './requestToRss';
+import uploadRss from './uploadRss.js';
 import startCheckNewPosts from './startCheckNewPosts.js';
 
 export default () => {
@@ -62,7 +62,7 @@ export default () => {
           .validate({ link: elements.input.value })
           .then(() => {
             const rssLink = elements.input.value;
-            requestToRss(rssLink, watcher);
+            uploadRss(rssLink, watcher);
           })
           .catch((e) => {
             watcher.form.valid = false;
