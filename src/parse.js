@@ -1,5 +1,3 @@
-import uniqueId from 'lodash/uniqueId.js';
-
 export default (data) => {
   const parser = new DOMParser();
   const dom = parser.parseFromString(data, 'text/xml');
@@ -11,7 +9,6 @@ export default (data) => {
   const feed = {
     title: dom.querySelector('title').textContent,
     description: dom.querySelector('description').textContent,
-    id: uniqueId(),
   };
 
   const items = Array.from(dom.querySelectorAll('item'));
@@ -19,8 +16,6 @@ export default (data) => {
     title: item.querySelector('title').textContent,
     description: item.querySelector('description').textContent,
     link: item.querySelector('link').textContent,
-    id: uniqueId(),
-    feedId: feed.id,
   }));
   return [feed, posts];
 };
