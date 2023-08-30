@@ -3,7 +3,9 @@ export default (data) => {
   const dom = parser.parseFromString(data, 'text/xml');
   const errorNode = dom.querySelector('parsererror');
   if (errorNode) {
-    throw new Error('form.errors.failParsing');
+    const error = new Error(errorNode.textContent);
+    error.isParsingError = true;
+    throw error;
   }
 
   const feed = {
@@ -15,7 +17,7 @@ export default (data) => {
   const posts = items.map((item) => ({
     title: item.querySelector('title').textContent,
     description: item.querySelector('description').textContent,
-    link: item.querySelector('link').textContent,
+    postLink: item.querySelector('link').textContent,
   }));
   return [feed, posts];
 };

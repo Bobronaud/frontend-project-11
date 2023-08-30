@@ -13,6 +13,7 @@ export default {
         invlidNotOneOf: 'RSS уже существует',
         failRequest: 'Ошибка сети',
         failParsing: 'Ресурс не содержит валидный RSS',
+        unknownError: 'Неизвестная ошибка',
       },
       success: 'RSS успешно загружен',
     },

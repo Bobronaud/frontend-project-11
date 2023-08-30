@@ -19,6 +19,7 @@ const uploadRss = (rss, state) => {
       const [feed, posts] = parse(content);
 
       feed.id = uniqueId();
+      feed.feedLink = rss;
       state.feeds.push(feed);
 
       posts.forEach((post) => {
@@ -27,31 +28,35 @@ const uploadRss = (rss, state) => {
         state.posts.push(post);
       });
 
-      state.rssLinks.push(rss);
-      state.form.valid = true;
+      state.form.state = 'processed';
     })
     .catch((err) => {
-      state.form.valid = false;
-      state.form.error = err.request ? 'form.errors.failRequest' : err.message;
+      state.form.state = 'failed';
+      if (err.isParsingError) {
+        state.form.error = 'form.errors.failParsing';
+      } else if (err.isAxiosError) {
+        state.form.error = 'form.errors.failRequest';
+      } else {
+        state.form.error = 'form.errors.unknownError';
+      }
       console.error(err);
     });
-  state.form.valid = '';
+  state.form.state = 'filling';
 };
 
 const startCheckNewPosts = (state) => {
-  const requests = state.rssLinks.map((rss) => {
+  const requests = state.feeds.map((feed) => {
     const request = axios
-      .get(addProxy(rss))
+      .get(addProxy(feed.feedLink))
       .then((response) => {
         const content = response.data.contents;
-        const [feed, posts] = parse(content);
-        const currentFeed = state.feeds.find(({ title }) => title === feed.title);
+        const [, posts] = parse(content);
 
-        const loadedPostsLinks = state.posts.map(({ link }) => link);
-        const newPosts = posts.filter((post) => !loadedPostsLinks.includes(post.link));
+        const loadedPostsLinks = state.posts.map(({ postLink }) => postLink);
+        const newPosts = posts.filter((post) => !loadedPostsLinks.includes(post.postLink));
         newPosts.forEach((post) => {
           post.id = uniqueId();
-          post.feedId = currentFeed.id;
+          post.feedId = feed.id;
           state.posts.push(post);
         });
       })
@@ -72,6 +77,7 @@ export default () => {
   const elements = {
     form: document.querySelector('form'),
     input: document.querySelector('input[name="url"]'),
+    submitButton: document.querySelector('form button'),
     feedback: document.querySelector('.feedback'),
     feeds: document.querySelector('.feeds'),
     posts: document.querySelector('.posts'),
@@ -81,14 +87,13 @@ export default () => {
   const initialState = {
     lang: defaultLang,
     form: {
-      valid: '',
-      error: '',
+      state: 'filling',
+      error: null,
     },
-    rssLinks: [],
     feeds: [],
     posts: [],
     uiState: {
-      modal: '',
+      modal: null,
       viewedPosts: [],
     },
   };
@@ -115,19 +120,20 @@ export default () => {
 
       elements.form.addEventListener('submit', (el) => {
         el.preventDefault();
+        watcher.form.state = 'processing';
         const formData = new FormData(el.target);
         const url = formData.get('url');
+        const feedLinks = watcher.feeds.map(({ feedLink }) => feedLink);
         const schema = yup.object().shape({
-          link: yup.string().min(1).url().notOneOf(watcher.rssLinks),
+          link: yup.string().min(1).url().notOneOf(feedLinks),
         });
         schema
           .validate({ link: url })
           .then(() => {
-            const rssLink = url;
-            uploadRss(rssLink, watcher);
+            uploadRss(url, watcher);
           })
           .catch((e) => {
-            watcher.form.valid = false;
+            watcher.form.state = 'failed';
             watcher.form.error = e.errors;
             console.error(e);
           });
@@ -135,7 +141,8 @@ export default () => {
 
       elements.posts.addEventListener('click', (e) => {
         const dataId = e.target.dataset.id;
-        if (dataId) {
+        const isViewed = watcher.uiState.viewedPosts.includes(dataId);
+        if (dataId && !isViewed) {
           watcher.uiState.modal = dataId;
           watcher.uiState.viewedPosts.push(dataId);
         }

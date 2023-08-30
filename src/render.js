@@ -1,17 +1,28 @@
 export default (elements, i18nInstance, state) => (path, value) => {
   const renderForm = () => {
-    if (value === '') {
-      return;
-    }
-    if (!value) {
-      elements.input.classList.add('is-invalid');
-    } else {
-      elements.input.classList.remove('is-invalid');
-      elements.feedback.classList.remove('text-danger');
-      elements.feedback.classList.add('text-success');
-      elements.feedback.textContent = i18nInstance.t('form.success');
-      elements.form.reset();
-      elements.input.focus();
+    switch (value) {
+      case 'filling':
+        break;
+      case 'failed':
+        elements.submitButton.removeAttribute('disabled');
+        elements.input.classList.add('is-invalid');
+        break;
+      case 'processing': {
+        elements.submitButton.setAttribute('disabled', 'true');
+        break;
+      }
+      case 'processed': {
+        elements.submitButton.removeAttribute('disabled');
+        elements.input.classList.remove('is-invalid');
+        elements.feedback.classList.remove('text-danger');
+        elements.feedback.classList.add('text-success');
+        elements.feedback.textContent = i18nInstance.t('form.success');
+        elements.form.reset();
+        elements.input.focus();
+        break;
+      }
+      default:
+        throw new Error(`state by value:'${value}' is not found`);
     }
   };
   const renderFeeds = () => {
@@ -114,7 +125,7 @@ export default (elements, i18nInstance, state) => (path, value) => {
   };
 
   switch (path) {
-    case 'form.valid': {
+    case 'form.state': {
       renderForm();
       break;
     }
@@ -136,9 +147,6 @@ export default (elements, i18nInstance, state) => (path, value) => {
     }
     case 'form.error': {
       renderError();
-      break;
-    }
-    case 'rssLinks': {
       break;
     }
     default:
