@@ -22,11 +22,17 @@ const uploadRss = (rss, state) => {
       feed.feedLink = rss;
       state.feeds.push(feed);
 
-      posts.forEach((post) => {
+      // posts.forEach((post) => {
+      //   post.id = uniqueId();
+      //   post.feedId = feed.id;
+      //   state.posts.push(post);
+      // });
+      const postsList = posts.map((post) => {
         post.id = uniqueId();
         post.feedId = feed.id;
-        state.posts.push(post);
+        return post;
       });
+      state.posts.push(...postsList);
 
       state.form.state = 'processed';
     })
@@ -41,7 +47,6 @@ const uploadRss = (rss, state) => {
       }
       console.error(err);
     });
-  state.form.state = 'filling';
 };
 
 const startCheckNewPosts = (state) => {
@@ -52,13 +57,21 @@ const startCheckNewPosts = (state) => {
         const content = response.data.contents;
         const [, posts] = parse(content);
 
-        const loadedPostsLinks = state.posts.map(({ postLink }) => postLink);
+        const postsOfCurrentFeed = state.posts.filter(({ feedId }) => feed.id === feedId);
+        const loadedPostsLinks = postsOfCurrentFeed.map(({ postLink }) => postLink);
         const newPosts = posts.filter((post) => !loadedPostsLinks.includes(post.postLink));
-        newPosts.forEach((post) => {
+
+        // newPosts.forEach((post) => {
+        //   post.id = uniqueId();
+        //   post.feedId = feed.id;
+        //   state.posts.push(post);
+        // });
+        const postsList = newPosts.map((post) => {
           post.id = uniqueId();
           post.feedId = feed.id;
-          state.posts.push(post);
+          return post;
         });
+        state.posts.push(...postsList);
       })
       .catch((err) => {
         console.error(err);
@@ -140,10 +153,14 @@ export default () => {
       });
 
       elements.posts.addEventListener('click', (e) => {
+        const clickedOnButtonOrLink = Boolean(e.target.dataset.id);
+        if (!clickedOnButtonOrLink) {
+          return;
+        }
         const dataId = e.target.dataset.id;
         const isViewed = watcher.uiState.viewedPosts.includes(dataId);
+        watcher.uiState.modal = dataId;
         if (dataId && !isViewed) {
-          watcher.uiState.modal = dataId;
           watcher.uiState.viewedPosts.push(dataId);
         }
       });

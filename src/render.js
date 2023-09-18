@@ -1,8 +1,6 @@
-export default (elements, i18nInstance, state) => (path, value) => {
+export default (elements, i18nInstance, state) => (path, value, prevValue) => {
   const renderForm = () => {
     switch (value) {
-      case 'filling':
-        break;
       case 'failed':
         elements.submitButton.removeAttribute('disabled');
         elements.input.classList.add('is-invalid');
@@ -44,7 +42,7 @@ export default (elements, i18nInstance, state) => (path, value) => {
     }
     const lastFeed = value[value.length - 1];
     const { title, description } = lastFeed;
-    const ul = document.querySelector('.feeds ul');
+    const ul = elements.feeds.querySelector('ul');
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'border-0', 'border-end-0');
     ul.prepend(li);
@@ -57,7 +55,7 @@ export default (elements, i18nInstance, state) => (path, value) => {
     li.append(header, p);
   };
   const renderPosts = () => {
-    const isFirstPostRender = value.length === 1;
+    const isFirstPostRender = prevValue.length === 0;
     if (isFirstPostRender) {
       const divCard = document.createElement('div');
       const divCardBody = document.createElement('div');
@@ -72,44 +70,47 @@ export default (elements, i18nInstance, state) => (path, value) => {
       ul.classList.add('list-group', 'border-0', 'rounded-0');
       divCard.append(divCardBody, ul);
     }
-    const lastPost = value[value.length - 1];
-    const { title, link, id } = lastPost;
-    const ul = document.querySelector('.posts ul');
-    const li = document.createElement('li');
-    li.classList.add(
-      'list-group-item',
-      'd-flex',
-      'justify-content-between',
-      'align-items-start',
-      'border-0',
-      'border-end-0',
-    );
-    const a = document.createElement('a');
-    a.classList.add('fw-bold');
-    a.setAttribute('href', link);
-    a.setAttribute('data-id', id);
-    a.setAttribute('target', '_blank');
-    a.setAttribute('rel', 'nooperer');
-    a.setAttribute('rel', 'noreferrer');
-    a.textContent = title;
-    const button = document.createElement('button');
-    button.classList.add('btn', 'btn-outline-primary', 'buttom-sm');
-    button.setAttribute('type', 'button');
-    button.setAttribute('data-id', id);
-    button.setAttribute('data-bs-toggle', 'modal');
-    button.setAttribute('data-bs-target', '#modal');
-    button.textContent = i18nInstance.t('main.posts.button.name');
-    li.append(a, button);
-    ul.prepend(li);
+    const newPosts = value.filter((currentValue) => !prevValue.includes(currentValue));
+    newPosts.forEach((item) => {
+      const { title, postLink, id } = item;
+      const ul = document.querySelector('.posts ul');
+      const li = document.createElement('li');
+      li.classList.add(
+        'list-group-item',
+        'd-flex',
+        'justify-content-between',
+        'align-items-start',
+        'border-0',
+        'border-end-0',
+      );
+      const a = document.createElement('a');
+      a.classList.add('fw-bold');
+      a.setAttribute('href', postLink);
+      a.setAttribute('data-id', id);
+      a.setAttribute('target', '_blank');
+      a.setAttribute('rel', 'nooperer');
+      a.setAttribute('rel', 'noreferrer');
+      a.textContent = title;
+      const button = document.createElement('button');
+      button.classList.add('btn', 'btn-outline-primary', 'buttom-sm');
+      button.setAttribute('type', 'button');
+      button.setAttribute('data-id', id);
+      button.setAttribute('data-bs-toggle', 'modal');
+      button.setAttribute('data-bs-target', '#modal');
+      button.textContent = i18nInstance.t('main.posts.button.name');
+      li.append(a, button);
+      ul.prepend(li);
+    });
   };
   const renderModal = () => {
     const post = state.posts.find(({ id }) => id === value);
+    const { title, description, postLink } = post;
     const modalTitle = document.querySelector('.modal-title');
-    modalTitle.textContent = post.title;
+    modalTitle.textContent = title;
     const modalBody = document.querySelector('.modal-body');
-    modalBody.textContent = post.description;
+    modalBody.textContent = description;
     const buttonToFullArticle = document.querySelector('.full-article');
-    buttonToFullArticle.setAttribute('href', post.link);
+    buttonToFullArticle.setAttribute('href', postLink);
   };
   const renderViewedPosts = () => {
     value.forEach((id) => {
