@@ -22,11 +22,6 @@ const uploadRss = (rss, state) => {
       feed.feedLink = rss;
       state.feeds.push(feed);
 
-      // posts.forEach((post) => {
-      //   post.id = uniqueId();
-      //   post.feedId = feed.id;
-      //   state.posts.push(post);
-      // });
       const postsList = posts.map((post) => {
         post.id = uniqueId();
         post.feedId = feed.id;
@@ -61,11 +56,6 @@ const startCheckNewPosts = (state) => {
         const loadedPostsLinks = postsOfCurrentFeed.map(({ postLink }) => postLink);
         const newPosts = posts.filter((post) => !loadedPostsLinks.includes(post.postLink));
 
-        // newPosts.forEach((post) => {
-        //   post.id = uniqueId();
-        //   post.feedId = feed.id;
-        //   state.posts.push(post);
-        // });
         const postsList = newPosts.map((post) => {
           post.id = uniqueId();
           post.feedId = feed.id;
