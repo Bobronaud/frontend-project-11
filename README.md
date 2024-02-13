@@ -1,4 +1,4 @@
-# [DEPLOY](https://read-rss.vercel.app/)
+# [RSS-reader](https://read-rss.vercel.app/)
 
 [![Actions Status](https://github.com/Bobronaud/frontend-project-11/workflows/hexlet-check/badge.svg)](https://github.com/Bobronaud/frontend-project-11/actions)
 [![Node CI](https://github.com/Bobronaud/frontend-project-11/actions/workflows/my-action.yml/badge.svg)](https://github.com/Bobronaud/frontend-project-11/actions/workflows/my-action.yml)
